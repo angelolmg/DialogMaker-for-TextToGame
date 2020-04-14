@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Maker</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h3>Dialog Maker</h3>
+
+    <form autocomplete="off" method="post" action=""></form>
+        <input id="userFile" type="file">
+        <button onclick="loadFileAsText()"><< Ler</button><br><br>
+<!-- 
+        <input id="fname" type="text" name="fname" placeholder="Digite um Personagem">
+        <input id="addBtnName" class="addBtn" type="button" value="Adicionar >>">
+        <select id="names"></select>
+        <button id="removeBtn" onclick="removeSelectedOption('names')">Remover</button>
+        <button id="clearBtn"onclick="clearSelect('names')">Limpar</button><br><br>
+-->
+        <input id="dname" type="text" name="dname" placeholder="Digite um Diálogo">
+        <input id="addBtnDialog" class="addBtn" type="button" value="Adicionar >>">
+        <select id="dialogs" onchange="atualizarEditor()">
+            <option value="" disabled selected>Adicione um Diálogo para Editar</option>
+        </select>
+        <button id="removeBtn" onclick="removeSelectedOption()">Remover</button>
+        <button id="clearBtn"onclick="clearArray()">Limpar</button><br><br>
+<!--
+        <hr id="upDivider"><br>
+
+        <select id="dialogEditor" onchange="atualizarEditor()">
+            <option value="" disabled selected>Selecione um Diálogo para Editar</option>
+        </select><br><br>
+
+        <div id="editorRegion"></div>
+    -->
+
+        <textarea name="editor" id="editor" cols="103" rows="10"></textarea>
+        <br><hr id= "bottomDivider">
+        <button onclick="saveFile()">Get Download Link</button>
+    </form>
+
+    <p id="dlink"></p>
+    <p id="userContent"></p>   
+</body>
+<script src="script.js"></script>
+</html>
