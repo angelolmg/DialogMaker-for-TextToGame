@@ -1,45 +1,14 @@
 var dialogContent = [];
+var selectedDialog = 0;
+var editor = document.getElementById("editor");
+var select = document.getElementById("dialogs");
+var dialogName = document.getElementById("dname");
 
-/*
-function setupActions() {
-    var selectAction = document.createElement('select');
-    var title = document.createElement('option');
-    title.text = title.value = "Selecione ação";
-    title.disabled = title.selected = true;
+// Saves the editor.value to the selected dialog index every 500ms
+var saveState = setInterval(saveEditor, 500);
+// Disables editor if no dialog is selected or a dialog is being made
+var editorToggle = setInterval(ToggleEditor, 200);
 
-    selectAction.add(title,0)
-
-    for(i = 0; i < actions.length; i++){
-        var option = document.createElement('option');
-        option.text = option.value = actions[i];
-        selectAction.add(option,selectAction.length);
-    }
-    selectAction.className = "editorSelection";
-    selectAction.addEventListener("change", function(){
-        var selectedOption = selectAction.options[selectAction.selectedIndex].value[0];
-        handleAction(selectedOption);
-
-    });
-
-    return selectAction;
-}
-
-function handleAction(selectedOption){
-    var editorRegion = document.getElementById("editorRegion");
-    switch(selectedOption){
-        case '1':
-            var nameSelector = document.getElementById("names");
-            var inputRegion = document.createElement("input");
-            inputRegion.placeholder = "Digite a fala do personagem";
-            inputRegion.class = inputRegion.name = "selectedName";
-            editorRegion.append(nameSelector);
-            editorRegion.append(inputRegion);
-
-            editorRegion.innerHTML.append("<br>");
-            console.log(selectedOption);
-    }
-}
-*/
 // Adds a new option on the drop-down list
 function addOption(name){
     if(name){
@@ -47,40 +16,37 @@ function addOption(name){
             name: name,
             content: ""
         }
-        dialogContent.push(newObj);
-
-        saveEditor();
-        atualizarSelect();
-        fetchEditor(); 
+        if(dialogContent.length == 0)
+            newObj.content = editor.value;
+        dialogContent.push(newObj);  
     }
 }
 
 function atualizarSelect(){
-    var select = document.getElementById("dialogs");
-
     clearSelect();
     for(i = 0; i < dialogContent.length; i++){
         var option = document.createElement("option");
         option.text = option.value = i + " - " + dialogContent[i].name;
         select.add(option, select.length);
-        select.selectedIndex = select.length-1;
     }
+
+    select.selectedIndex = select.length-1;
+    selectedDialog = select.selectedIndex - 1;
 }
 
 // Removes selected option on the drop-down
 function removeSelectedOption(){
-    var select = document.getElementById("dialogs");
     var toRemove = select.selectedIndex;
     var nameToRemove = select.options[toRemove].value;
 
     if(select.length > 1){
+        // Remove options from list of objects
         dialogContent.splice(findArrayPositionFromName(nameToRemove), 1);
         atualizarSelect();
         select.selectedIndex = toRemove;
     } else {
         select.innerHTML = "<option value='' disabled selected>Adicione um Diálogo para Editar</option>";
     }
-
     fetchEditor();
 }
 
@@ -93,13 +59,12 @@ function findArrayPositionFromName(name){
 
 // Clears drop-down list
 function clearSelect(){
-    var select = document.getElementById("dialogs");
     for(i = select.length-1; i >= 0 ; i--){
         select.selectedIndex = i;
         select.remove(select.selectedIndex);
     }
     select.innerHTML = "<option value='' disabled selected>Adicione um Diálogo para Editar</option>";
-    fetchEditor();
+    editor.value = "";
 }
 
 function clearArray(){
@@ -108,7 +73,6 @@ function clearArray(){
 }
 
 function saveFile(){
-    var select = document.getElementById("dialogs");
     var content = "";
     for(i = 0; i < select.length; i++)
         content += select.options[i].value + "\n";
@@ -135,39 +99,49 @@ function loadFileAsText(){
 }
 
 function saveEditor(){
-    var selector = document.getElementById("dialogs");
-    var editor = document.getElementById("editor");
-/*
-    var actualContent = editor.value;
-    var actualIndex = selector.selectedIndex;
-
-    if(actualIndex)
-        dialogContent[actualIndex-1].content = actualContent;*/
+    if(dialogContent.length > 0){
+        dialogContent[selectedDialog].content = editor.value;
+        console.log("SAVED");
+    }
+        
 }
 
 function fetchEditor(){
-    var selector = document.getElementById("dialogs");
-    var editor = document.getElementById("editor");
-/*
-    var actualIndex = selector.selectedIndex;
-    if(actualIndex){
-        var actualContent = dialogContent[actualIndex-1].content;
-        editor.value = actualContent;
-    } */
+    var indexToFetchFrom = select.selectedIndex-1;
+    var contentBox = dialogContent[indexToFetchFrom];
+
+    ToggleEditor();
+
+    if(contentBox)
+        editor.value = contentBox.content;
+    else 
+        console.log("Nothing in the contents of index " + indexToFetchFrom);
 }
 
 function atualizarEditor(){
-    saveEditor();
+    //saveEditor();
     fetchEditor();
 
-    //console.log("HI");
-    //document.getElementById("editorRegion").append(setupActions());
-    //document.getElementById("bottomDivider").insertAdjacentElement("beforebegin", select);
+    selectedDialog = select.selectedIndex-1;
+}
 
+function ToggleEditor(){
+    if(dialogName.value != "" || dialogContent.length == 0){
+        editor.disabled = true;
+    } else {
+        editor.disabled = false;
+    }
 }
 
 document.getElementById("addBtnDialog").addEventListener("click", function(){
-    var dialog = document.getElementById("dname");
-    addOption(dialog.value);
-    dialog.value = "";
+    addOption(dialogName.value);
+    dialogName.value = "";
+
+    atualizarSelect();
+    fetchEditor();
+});
+
+editor.addEventListener("click", function(){
+    console.log("HI");
+    ToggleEditor();
 });
