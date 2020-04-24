@@ -22,31 +22,33 @@ function addOption(name){
     }
 }
 
-function atualizarSelect(){
+function UpdateSelect(){
     clearSelect();
     for(i = 0; i < dialogContent.length; i++){
         var option = document.createElement("option");
-        option.text = option.value = i + " - " + dialogContent[i].name;
+        option.text = option.value = (i+1) + " - " + dialogContent[i].name;
         select.add(option, select.length);
     }
 
-    select.selectedIndex = select.length-1;
+    select.selectedIndex = select.length - 1;
     selectedDialog = select.selectedIndex - 1;
 }
 
 // Removes selected option on the drop-down
 function removeSelectedOption(){
     var toRemove = select.selectedIndex;
-    var nameToRemove = select.options[toRemove].value;
 
-    if(select.length > 1){
-        // Remove options from list of objects
-        dialogContent.splice(findArrayPositionFromName(nameToRemove), 1);
-        atualizarSelect();
+    // Remove option from list of objects and update
+    dialogContent.splice(toRemove - 1, 1);
+    UpdateSelect();
+
+    // If removed was not last, select the new option at toRemove index
+    if(toRemove < select.options.length)
         select.selectedIndex = toRemove;
-    } else {
+
+    if(select.length <= 1)
         select.innerHTML = "<option value='' disabled selected>Adicione um Diálogo para Editar</option>";
-    }
+        
     fetchEditor();
 }
 
@@ -69,7 +71,7 @@ function clearSelect(){
 
 function clearArray(){
     dialogContent = [];
-    atualizarSelect();
+    UpdateSelect();
 }
 
 function saveFile(){
@@ -99,11 +101,8 @@ function loadFileAsText(){
 }
 
 function saveEditor(){
-    if(dialogContent.length > 0){
-        dialogContent[selectedDialog].content = editor.value;
-        console.log("SAVED");
-    }
-        
+    if(dialogContent.length > 0)
+        dialogContent[selectedDialog].content = editor.value;   
 }
 
 function fetchEditor(){
@@ -119,9 +118,7 @@ function fetchEditor(){
 }
 
 function atualizarEditor(){
-    //saveEditor();
     fetchEditor();
-
     selectedDialog = select.selectedIndex-1;
 }
 
@@ -137,11 +134,6 @@ document.getElementById("addBtnDialog").addEventListener("click", function(){
     addOption(dialogName.value);
     dialogName.value = "";
 
-    atualizarSelect();
+    UpdateSelect();
     fetchEditor();
-});
-
-editor.addEventListener("click", function(){
-    console.log("HI");
-    ToggleEditor();
 });
