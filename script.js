@@ -3,6 +3,10 @@ var editor = document.getElementById("editor");
 var select = document.getElementById("dialogs");
 var dialogName = document.getElementById("dname");
 
+var enterKeyCode = 13;
+var tabKeyCode = 9;
+var rightArrowKeyCode = 39;
+
 // Saves the editor.value to the selected dialog index every 500ms
 var saveState = setInterval(saveEditor, 500);
 // Disables editor if no dialog is selected or a dialog is being made
@@ -133,7 +137,7 @@ function ToggleEditor(){
     }
 }
 
-document.getElementById("addBtnDialog").addEventListener("click", function(){
+function addValue(){
     if(dialogName.value){
         addOption(dialogName.value);
         dialogName.value = "";
@@ -143,4 +147,29 @@ document.getElementById("addBtnDialog").addEventListener("click", function(){
 
         fetchEditor();
     }
-});
+    toggleFocus();
+}
+
+function toggleFocus(){
+    var activeElement = document.activeElement;
+    if(activeElement.id == "addDialogBtn" ||
+       activeElement.id == "dname" ){
+        editor.focus();
+    } else if(activeElement.id == "downloadBtn"){
+        dialogName.focus();
+    }
+ }
+
+document.onkeypress = function (e) {
+    e = e || window.event;
+    // Handles ENTER key press
+    if(e.keyCode == enterKeyCode)
+        addValue();     
+};
+
+
+// Handles TAB button press
+document.addEventListener("keyup", event => {
+    if (event.isComposing || event.keyCode === tabKeyCode)
+        toggleFocus();
+  });

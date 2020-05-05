@@ -13,7 +13,8 @@
         <input id="userFile" type="file">
         <button onclick="loadFileAsText()"><< Ler</button><br><br>
         <input autofocus id="dname" type="text" name="dname" placeholder="Digite um Diálogo">
-        <input id="addBtnDialog" class="addBtn" type="button" value="Adicionar >>">
+        <button id="addDialogBtn" onclick="addValue()">Adicionar >></button>
+        <!--<input id="addBtnDialog" class="addBtn" type="button" value="Adicionar >>">-->
 
         <select id="dialogs" onchange="atualizarEditor()">
             <option value="" disabled selected>Adicione um Diálogo para Editar</option>
@@ -24,7 +25,7 @@
 
         <textarea disabled name="editor" id="editor" cols="103" rows="10"></textarea>
         <br><hr id= "bottomDivider">
-        <button onclick="saveFile()">Get Download Link</button>
+        <button onclick="saveFile()" id="downloadBtn">Get Download Link</button>
     </form>
 
     <p id="dlink"></p>
