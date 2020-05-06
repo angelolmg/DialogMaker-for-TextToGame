@@ -2,6 +2,8 @@ var dialogContent = [];
 var editor = document.getElementById("editor");
 var select = document.getElementById("dialogs");
 var dialogName = document.getElementById("dname");
+var removeButton = document.getElementById("removeBtn");
+var clearButton = document.getElementById("clearBtn");
 
 var enterKeyCode = 13;
 var tabKeyCode = 9;
@@ -158,7 +160,7 @@ function toggleFocus(){
     } else if(activeElement.id == "downloadBtn"){
         dialogName.focus();
     }
- }
+}
 
 document.onkeypress = function (e) {
     e = e || window.event;
@@ -172,4 +174,14 @@ document.onkeypress = function (e) {
 document.addEventListener("keyup", event => {
     if (event.isComposing || event.keyCode === tabKeyCode)
         toggleFocus();
-  });
+});
+
+removeButton.addEventListener("click", function(){
+    if(confirm("Do you really want to remove the selected option?"))
+        removeSelectedOption();
+});
+
+clearButton.addEventListener("click", function(){
+    if(confirm("Do you really want to clear ALL the dialog?\nBe reminded that if you don't save it, it's lost."))
+        clearArray();
+});
